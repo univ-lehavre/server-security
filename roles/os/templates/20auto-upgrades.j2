@@ -1,3 +1,4 @@
+
 APT::Periodic::Update-Package-Lists "1";
 APT::Periodic::Download-Upgradeable-Packages "1";
 APT::Periodic::AutocleanInterval "7";
@@ -8,4 +9,4 @@ APT::Periodic::Autoremove "1";
 Unattended-Upgrade::Mail "root";
 Unattended-Upgrade::MailOnlyOnError "true";
 Unattended-Upgrade::Automatic-Reboot "true";
-Unattended-Upgrade::Automatic-Reboot-Time "03:{{ '%02d' | format(unattended_reboot_minute) }}";
+Unattended-Upgrade::Automatic-Reboot-Time "03:{{ '%02d' | format(os_unattended_reboot_minute | int) }}";
