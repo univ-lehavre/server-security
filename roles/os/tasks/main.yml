@@ -4,6 +4,11 @@
     - os
     - updates
   block:
+    - name: Changer la durée de vie du mot de passe de l'utilisateur courant
+      ansible.builtin.user:
+        name: "{{ ansible_user }}"
+        password_expire_max: "{{ env_vars_password_expiration }}"
+
     - name: Mettre à jour le système
       ansible.builtin.apt:
         update_cache: true

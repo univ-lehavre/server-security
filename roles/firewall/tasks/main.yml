@@ -41,7 +41,6 @@
     - name: Activer et appliquer UFW
       community.general.ufw:
         state: enabled
-        enabled: true
   rescue:
     - name: Échec de la configuration UFW
       ansible.builtin.debug:

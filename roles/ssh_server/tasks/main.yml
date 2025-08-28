@@ -56,7 +56,7 @@
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         regexp: "^#?AllowUsers"
-        line: "AllowUsers {{ host_user }}"
+        line: "AllowUsers {{ env_vars_host_user }}"
         state: present
       notify: Restart SSH
 
@@ -89,19 +89,8 @@
         msg: "Échec lors de l'application de la configuration SSH sur {{ inventory_hostname }}"
   always:
     - name: Vérifier la configuration SSH effective
-      ansible.builtin.command: >
-        grep -E '^(
-          PermitRootLogin|
-          PasswordAuthentication|
-          ChallengeResponseAuthentication|
-          MaxAuthTries|
-          LoginGraceTime|
-          LogLevel|
-          AllowUsers|
-          PubkeyAuthentication|
-          ClientAliveInterval|
-          ClientAliveCountMax
-        )' /etc/ssh/sshd_config
+      # noqa 204
+      ansible.builtin.command: grep -E '^(PermitRootLogin|PasswordAuthentication|ChallengeResponseAuthentication|MaxAuthTries|LoginGraceTime|LogLevel|AllowUsers|PubkeyAuthentication|ClientAliveInterval|ClientAliveCountMax)' /etc/ssh/sshd_config
       register: ssh_server_config_check
       changed_when: false
     - name: Afficher la configuration SSH effective

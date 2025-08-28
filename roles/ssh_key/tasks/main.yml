@@ -14,7 +14,7 @@
 
     - name: Copier la clé publique dans authorized_keys
       ansible.builtin.copy:
-        src: "{{ ansible_ssh_public_key_file }}"
+        src: "{{ env_vars_ssh_key }}"
         dest: "/home/{{ env_vars_host_user }}/.ssh/authorized_keys"
         owner: "{{ env_vars_host_user }}"
         group: "{{ env_vars_host_user }}"
