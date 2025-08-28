@@ -1,0 +1,36 @@
+- name: Installation et configuration de fail2ban
+  become: true
+  tags:
+    - fail2ban
+  block:
+    - name: Installer fail2ban
+      ansible.builtin.apt:
+        name: fail2ban
+        state: present
+        update_cache: true
+
+    - name: Copier la configuration fail2ban locale
+      ansible.builtin.copy:
+        src: jail.local
+        dest: /etc/fail2ban/jail.local
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Restart fail2ban
+
+    - name: S'assurer que fail2ban est activé et démarré
+      ansible.builtin.service:
+        name: fail2ban
+        state: started
+        enabled: true
+  rescue:
+    - name: Échec de la configuration de fail2ban
+      ansible.builtin.debug:
+        msg: "Échec lors de la configuration de fail2ban sur {{ inventory_hostname }}"
+  always:
+    - name: Vérifier l'état du service fail2ban
+      ansible.builtin.service_facts:
+
+    - name: Afficher l'état du service fail2ban
+      ansible.builtin.debug:
+        var: ansible_facts.services['fail2ban.service']

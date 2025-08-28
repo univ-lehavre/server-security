@@ -1,0 +1,33 @@
+- name: Déploiement de la clé publique SSH
+  become: true
+  tags:
+    - ssh
+    - ssh_key
+  block:
+    - name: Créer le dossier .ssh pour l’utilisateur
+      ansible.builtin.file:
+        path: "/home/{{ env_vars_host_user }}/.ssh"
+        state: directory
+        owner: "{{ env_vars_host_user }}"
+        group: "{{ env_vars_host_user }}"
+        mode: "0700"
+
+    - name: Copier la clé publique dans authorized_keys
+      ansible.builtin.copy:
+        src: "{{ ansible_ssh_public_key_file }}"
+        dest: "/home/{{ env_vars_host_user }}/.ssh/authorized_keys"
+        owner: "{{ env_vars_host_user }}"
+        group: "{{ env_vars_host_user }}"
+        mode: "0600"
+  rescue:
+    - name: Échec du déploiement de la clé SSH
+      ansible.builtin.debug:
+        msg: "Échec lors du déploiement de la clé SSH sur {{ inventory_hostname }}"
+  always:
+    - name: Vérifier la présence du fichier authorized_keys
+      ansible.builtin.stat:
+        path: "/home/{{ env_vars_host_user }}/.ssh/authorized_keys"
+      register: ssh_key_stat
+    - name: Afficher le statut du fichier authorized_keys
+      ansible.builtin.debug:
+        var: ssh_key_stat.stat

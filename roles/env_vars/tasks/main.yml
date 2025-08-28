@@ -1,0 +1,34 @@
+- name: Importer les variables d'environnement du .env et les affecter à des
+    variables Ansible
+  tags:
+    - env
+    - variables
+  block:
+    - name: "Affecter les variables d'environnement à des variables Ansible"
+      ansible.builtin.set_fact:
+        env_vars_mail_root_redirect: "{{ lookup('ansible.builtin.env', 'MAIL_ROOT_REDIRECT') }}"
+        env_vars_host_user: "{{ lookup('ansible.builtin.env', 'HOST_USER') }}"
+        env_vars_elastic_agent_url: "{{ lookup('ansible.builtin.env', 'ELASTIC_AGENT_URL') }}"
+        cacheable: true
+
+    - name: Vérifier que les variables sont bien définies
+      ansible.builtin.assert:
+        that:
+          - env_vars_mail_root_redirect is defined
+          - env_vars_mail_root_redirect | length > 0
+          - env_vars_host_user is defined
+          - env_vars_host_user | length > 0
+          - env_vars_elastic_agent_url is defined
+          - env_vars_elastic_agent_url | length > 0
+        fail_msg: "Les variables d'environnement ne sont pas définies ou sont vides."
+  rescue:
+    - name: Échec de l'import des variables d'environnement
+      ansible.builtin.debug:
+        msg: "Échec lors de l'import des variables d'environnement sur {{ inventory_hostname }}"
+  always:
+    - name: Afficher les variables importées
+      ansible.builtin.debug:
+        msg: >
+          env_vars_mail_root_redirect={{ env_vars_mail_root_redirect }},
+          env_vars_host_user={{ env_vars_host_user }},
+          env_vars_elastic_agent_url={{ env_vars_elastic_agent_url }}

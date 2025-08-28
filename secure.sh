@@ -1,0 +1,1 @@
+set -a; source .env; set +a; ansible-playbook --hosts hosts.yml secure.yml

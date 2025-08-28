@@ -1,0 +1,8 @@
+- name: Redémarrer le service fail2ban
+  become: true
+  tags:
+    - fail2ban
+  ansible.builtin.service:
+    name: fail2ban
+    state: restarted
+  listen: Restart fail2ban

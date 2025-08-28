@@ -1,0 +1,21 @@
+---
+- name: Sécurité du système d'exploitation
+  hosts: all
+  serial: 1
+  become: true
+  roles:
+    - os
+
+- name: Sécurité complémentaire
+  hosts: all
+  become: true
+  roles:
+    - env_vars
+    - firewall
+    - ssh_server
+    - ssh_key
+    - auditd
+    - fail2ban
+    - mail_root
+    - tailscale
+    - elastic_agent

@@ -1,0 +1,26 @@
+- name: Download Elastic Agent
+  ansible.builtin.get_url:
+    url: https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-9.1.2-linux-x86_64.tar.gz
+    dest: /tmp/elastic-agent-9.1.2-linux-x86_64.tar.gz
+    mode: "0644"
+
+- name: Extract Elastic Agent
+  ansible.builtin.unarchive:
+    src: /tmp/elastic-agent-9.1.2-linux-x86_64.tar.gz
+    dest: /tmp/elastic/
+    remote_src: true
+
+- name: Install Elastic Agent
+  ansible.builtin.command: ./elastic-agent install --url={{ elastic_agent_url }} --enrollment-token={{ elastic_agent_enrollment_token }} --non-interactive
+  args:
+    chdir: /tmp/elastic
+    creates: /opt/Elastic/Agent/elastic-agent
+  environment:
+    FLEET_ENROLL: "1"
+  become: true
+
+- name: Ensure Elastic Agent service is running
+  ansible.builtin.service:
+    name: elastic-agent
+    state: started
+    enabled: true
