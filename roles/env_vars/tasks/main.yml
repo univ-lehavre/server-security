@@ -6,7 +6,6 @@
       ansible.builtin.set_fact:
         env_vars_mail_root_redirect: "{{ lookup('ansible.builtin.env', 'MAIL_ROOT_REDIRECT') }}"
         env_vars_host_user: "{{ lookup('ansible.builtin.env', 'HOST_USER') }}"
-        env_vars_elastic_agent_url: "{{ lookup('ansible.builtin.env', 'ELASTIC_AGENT_URL') }}"
         env_vars_password_expiration: "{{ lookup('ansible.builtin.env', 'PASSWORD_EXPIRATION') }}"
         env_vars_ssh_key: "{{ lookup('ansible.builtin.env', 'PUBLIC_SSH_KEY') }}"
         cacheable: true
@@ -26,8 +25,6 @@
           - env_vars_mail_root_redirect | length > 0
           - env_vars_host_user is defined
           - env_vars_host_user | length > 0
-          - env_vars_elastic_agent_url is defined
-          - env_vars_elastic_agent_url | length > 0
           - env_vars_password_expiration is defined
           - env_vars_password_expiration | length > 0
           - env_vars_ssh_key is defined
@@ -43,7 +40,6 @@
         env_vars_debug:
           env_vars_mail_root_redirect: "{{ env_vars_mail_root_redirect }}"
           env_vars_host_user: "{{ env_vars_host_user }}"
-          env_vars_elastic_agent_url: "{{ env_vars_elastic_agent_url }}"
           env_vars_password_expiration: "{{ env_vars_password_expiration }}"
           env_vars_ssh_key: "{{ env_vars_ssh_key }}"
 
