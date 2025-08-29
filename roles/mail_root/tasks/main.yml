@@ -4,6 +4,10 @@
     - mail
     - root
   block:
+    - name: Installer postfix (pour fournir /etc/aliases)
+      ansible.builtin.apt:
+        name: postfix
+        state: present
     - name: Définir l'alias root dans /etc/aliases
       ansible.builtin.lineinfile:
         path: /etc/aliases
