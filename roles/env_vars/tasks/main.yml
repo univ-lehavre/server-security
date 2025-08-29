@@ -32,11 +32,15 @@
       ansible.builtin.debug:
         msg: "Échec lors de l'import des variables d'environnement sur {{ inventory_hostname }}"
   always:
+    - name: Créer une variable ansible
+      ansible.builtin.set_fact:
+        env_vars_debug:
+          env_vars_mail_root_redirect: "{{ env_vars_mail_root_redirect }}"
+          env_vars_host_user: "{{ env_vars_host_user }}"
+          env_vars_elastic_agent_url: "{{ env_vars_elastic_agent_url }}"
+          env_vars_password_expiration: "{{ env_vars_password_expiration }}"
+          env_vars_ssh_key: "{{ env_vars_ssh_key }}"
+
     - name: Afficher les variables importées
       ansible.builtin.debug:
-        msg: >
-          env_vars_mail_root_redirect={{ env_vars_mail_root_redirect }},
-          env_vars_host_user={{ env_vars_host_user }},
-          env_vars_elastic_agent_url={{ env_vars_elastic_agent_url }},
-          env_vars_password_expiration={{ env_vars_password_expiration }},
-          env_vars_ssh_key={{ env_vars_ssh_key }}
+        var: env_vars_debug
