@@ -1,13 +1,15 @@
 {
   "name": "server-security",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Cybersécurité d’un cluster de serveurs",
   "author": "Pierre-Olivier Chasset",
   "license": "UNLICENSED",
   "scripts": {
     "format-check": "prettier --check .",
     "format": "prettier --write .",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "changeset": "npx @changesets/cli",
+    "bump": "npx @changesets/cli version"
   },
   "repository": {
     "type": "git",
@@ -18,6 +20,8 @@
   },
   "homepage": "https://github.com/univ-lehavre/server-security#readme",
   "dependencies": {
+    "changeset": "^0.2.6",
+    "commit": "link:@changesets/cli/commit",
     "prettier": "^3.6.2"
   }
 }
