@@ -1,8 +1,24 @@
-- name: Redémarrer le service fail2ban
+- name: Recharger la configuration de fail2ban
   become: true
   tags:
     - fail2ban
   ansible.builtin.service:
     name: fail2ban
-    state: restarted
-  listen: Restart fail2ban
+    state: reloaded
+  listen: Reload fail2ban
+
+- name: Récupérer le statut du service fail2ban
+  become: true
+  tags:
+    - fail2ban
+  ansible.builtin.command: systemctl status fail2ban
+  listen: Retrieve fail2ban status
+  register: fail2ban_status
+  changed_when: false
+  ignore_errors: true
+
+- name: Afficher la sortie du statut fail2ban
+  ansible.builtin.debug:
+    var: fail2ban_status.stdout_lines
+  listen: Print fail2ban status
+  when: fail2ban_status is defined and fail2ban_status.stdout_lines is defined
