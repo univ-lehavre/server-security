@@ -13,8 +13,6 @@
     - firewall
     - ssh_server
     - ssh_key
-#     - auditd
-#     - fail2ban
-#     - mail_root
-#     - tailscale
-#     - elastic_agent
+    - auditd
+    - fail2ban
+    - mail_root
