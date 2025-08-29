@@ -2,6 +2,10 @@
 
 [![DOI](https://zenodo.org/badge/1046248953.svg)](https://doi.org/10.5281/zenodo.16983614)
 
+## Objectif
+
+- Tendre vers une politique **zero trust** de cybersécurité
+
 ## Pré-requis
 
 Avant de commencer, assurez-vous d'avoir installé localement les dépendances nécessaires :
@@ -10,7 +14,7 @@ Avant de commencer, assurez-vous d'avoir installé localement les dépendances n
 - **Python** : pour les scripts et modules utilisés.
 - **SSH** : pour la connexion aux serveurs distants.
 
-Vous avez besoin des adresses IP de tous vos serveurs, ces derniers viendront d’être installés avec le système d’exploitation Debian bookworm (12) et seront accessibles via le port 22.
+Vous avez besoin des adresses IP de tous vos serveurs, ces derniers viendront d’être installés avec le système d’exploitation Debian bookworm (12), seront accessibles via le port 22 et chacun d’eux possède uniquement un compte utilisateur principal avec un mot de passe fort.
 
 ## Installation
 
