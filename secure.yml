@@ -1,18 +1,18 @@
-- name: Sécurité du système d'exploitation
+- name: Mise à jour du système d'exploitation
   hosts: all
   serial: 1
   become: true
   roles:
-    - env_vars
-    - os
-- name: Sécurité complémentaire
+    - os-upgrade
+- name: Sécurisation
   hosts: all
   become: true
   roles:
     - env_vars
-    - firewall
-    - ssh_server
     - ssh_key
+    - ssh_server
+    - firewall
+    - os
     - auditd
     - fail2ban
     - mail_root
