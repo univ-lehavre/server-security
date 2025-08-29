@@ -1,33 +1,29 @@
-- name: Configuration système (mise à jour et unattended-upgrades)
+- name: Configuration des utilisateurs
   become: true
   tags:
     - os
-    - updates
+    - user
   block:
-    - name: Changer la durée de vie du mot de passe de l'utilisateur courant
+    - name: Configuration de l’utilisateur principal
       ansible.builtin.user:
         name: "{{ ansible_user }}"
-        password_expire_max: "{{ env_vars_password_expiration }}"
+        password_expire_min: "{{ env_vars_password_expiration }}"
+  rescue:
+    - name: Échec de la configuration de l’utilisateur principal
+      ansible.builtin.debug:
+        var: ansible_failed_result
+        msg: "Échec de la configuration de l’utilisateur principal sur {{ inventory_hostname }}"
 
+- name: Mise à jour du système d’exploitation
+  become: true
+  tags:
+    - os
+    - upgrade
+  block:
     - name: Mettre à jour le système
       ansible.builtin.apt:
         update_cache: true
         upgrade: dist
-
-    - name: Installer la mise à jour automatique
-      ansible.builtin.apt:
-        name: unattended-upgrades
-        state: present
-
-    - name: Générer une minute aléatoire pour le reboot automatique
-      ansible.builtin.set_fact:
-        os_unattended_reboot_minute: "{{ 59 | random(seed=inventory_hostname) | int }}"
-
-    - name: Déployer le fichier 20auto-upgrades avec minute aléatoire
-      ansible.builtin.template:
-        src: 20auto-upgrades.j2
-        dest: /etc/apt/apt.conf.d/20auto-upgrades
-        mode: "0644"
 
     - name: Vérifier si un redémarrage est nécessaire
       ansible.builtin.stat:
@@ -43,12 +39,33 @@
         post_reboot_delay: 30
       when: os_reboot_required.stat.exists
   rescue:
-    - name: Échec du bloc de configuration OS
+    - name: Échec de la configuration de l’OS
       ansible.builtin.debug:
         var: ansible_failed_result
-        msg: "Échec lors de l'application des tâches OS sur {{ inventory_hostname }}"
-  always:
-    - name: Rafraîchir le cache apt (assurance)
+        msg: "Échec de la configuration de l’OS sur {{ inventory_hostname }}"
+
+- name: Configuration des mises à jour critiques
+  become: true
+  tags:
+    - os
+    - unattended
+  block:
+    - name: Installer la mise à jour automatique
       ansible.builtin.apt:
-        update_cache: true
-      changed_when: false
+        name: unattended-upgrades
+        state: present
+
+    - name: Générer une minute aléatoire pour le reboot automatique
+      ansible.builtin.set_fact:
+        os_unattended_reboot_minute: "{{ 59 | random(seed=inventory_hostname) | int }}"
+
+    - name: Déployer le fichier 20auto-upgrades avec minute aléatoire
+      ansible.builtin.template:
+        src: 20auto-upgrades.j2
+        dest: /etc/apt/apt.conf.d/20auto-upgrades
+        mode: "0644"
+  rescue:
+    - name: Échec de la configuration des mises à jour automatiques
+      ansible.builtin.debug:
+        var: ansible_failed_result
+        msg: "Échec de la configuration des mises à jour automatiques sur {{ inventory_hostname }}"
