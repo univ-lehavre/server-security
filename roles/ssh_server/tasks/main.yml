@@ -89,8 +89,7 @@
         msg: "Échec lors de l'application de la configuration SSH sur {{ inventory_hostname }}"
   always:
     - name: Vérifier la configuration SSH effective
-      # noqa 204
-      ansible.builtin.command: grep -E '^(PermitRootLogin|PasswordAuthentication|ChallengeResponseAuthentication|MaxAuthTries|LoginGraceTime|LogLevel|AllowUsers|PubkeyAuthentication|ClientAliveInterval|ClientAliveCountMax)' /etc/ssh/sshd_config
+      ansible.builtin.command: grep -E '^(PermitRootLogin|PasswordAuthentication|ChallengeResponseAuthentication|MaxAuthTries|LoginGraceTime|LogLevel|AllowUsers|PubkeyAuthentication|ClientAliveInterval|ClientAliveCountMax)' /etc/ssh/sshd_config # noqa yaml[line-length]
       register: ssh_server_config_check
       changed_when: false
     - name: Afficher la configuration SSH effective
