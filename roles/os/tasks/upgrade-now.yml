@@ -1,8 +1,5 @@
 - name: Mise à jour du système d’exploitation
   become: true
-  tags:
-    - os
-    - upgrade
   block:
     - name: Mettre à jour le système
       ansible.builtin.apt:
@@ -22,8 +19,3 @@
         pre_reboot_delay: 0
         post_reboot_delay: 30
       when: os_reboot_required.stat.exists
-  rescue:
-    - name: Échec de la mise à jour du système d’exploitation
-      ansible.builtin.debug:
-        var: ansible_failed_result
-        msg: "Échec de la mise à jour du système d’exploitation sur {{ inventory_hostname }}"

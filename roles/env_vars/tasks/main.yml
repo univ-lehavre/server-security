@@ -1,6 +1,6 @@
 - name: Importer les variables d'environnement dans des variables Ansible
   tags:
-    - env
+    - import
   block:
     - name: "Affecter les variables d'environnement à des variables Ansible"
       ansible.builtin.set_fact:
@@ -8,15 +8,10 @@
         env_vars_host_user: "{{ lookup('ansible.builtin.env', 'HOST_USER') }}"
         env_vars_password_expiration: "{{ lookup('ansible.builtin.env', 'PASSWORD_EXPIRATION') }}"
         env_vars_ssh_key: "{{ lookup('ansible.builtin.env', 'PUBLIC_SSH_KEY') }}"
-        cacheable: true
-  rescue:
-    - name: Échec de l'affectation des variables d'environnement à des variables ansible
-      ansible.builtin.debug:
-        msg: "Échec de l’affectation des variables d'environnement à des variables ansible sur {{ inventory_hostname }}"
 
 - name: Vérification de l’import des variables d’environnement
   tags:
-    - env
+    - checks
   block:
     - name: Vérifier que les variables sont définies et ont une chaîne de caractères non vide
       ansible.builtin.assert:
@@ -30,10 +25,6 @@
           - env_vars_ssh_key is defined
           - env_vars_ssh_key | length > 0
         fail_msg: "Les variables d'environnement ne sont pas définies ou sont vides."
-  rescue:
-    - name: Échec sur la définition des variables d'environnement
-      ansible.builtin.debug:
-        msg: "Échec lors de la définition des variables d'environnement sur {{ inventory_hostname }}"
   always:
     - name: Créer une variable ansible
       ansible.builtin.set_fact:

@@ -1,18 +1,25 @@
+- name: Paramétrage du playbook
+  hosts: all
+  roles:
+    - env_vars
+
 - name: Mise à jour du système d'exploitation
   hosts: all
   serial: 1
-  become: true
-  roles:
-    - os-upgrade
+  tasks:
+    - name: Mise à jour du système d'exploitation
+      ansible.builtin.include_role:
+        name: os
+        tasks_from: upgrade-now
+
 - name: Sécurisation
   hosts: all
   become: true
   roles:
-    - env_vars
+    - os
     - ssh_key
     - ssh_server
     - firewall
-    - os
     - auditd
     - fail2ban
     - mail_root
