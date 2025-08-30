@@ -1,9 +1,15 @@
 - name: Configuration sécurisée du serveur SSH
   become: true
-  tags:
-    - ssh
-    - sshd
   block:
+    - name: Sauvegarder la configuration SSH actuelle
+      ansible.builtin.copy:
+        src: /etc/ssh/sshd_config
+        dest: /etc/ssh/sshd_config.bak
+        remote_src: true
+        owner: root
+        group: root
+        mode: '0600'
+
     - name: Désactiver le login root
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
@@ -56,7 +62,7 @@
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         regexp: "^#?AllowUsers"
-        line: "AllowUsers {{ env_vars_host_user }}"
+        line: "AllowUsers {{ settings_host_user }}"
         state: present
       notify: Restart SSH
 
@@ -84,14 +90,21 @@
         state: present
       notify: Restart SSH
   rescue:
-    - name: Échec de la configuration SSH
-      ansible.builtin.debug:
-        msg: "Échec lors de l'application de la configuration SSH sur {{ inventory_hostname }}"
+    - name: Rollback de la configuration SSH en cas d’échec
+      ansible.builtin.copy:
+        src: /etc/ssh/sshd_config.bak
+        dest: /etc/ssh/sshd_config
+        remote_src: true
+        owner: root
+        group: root
+        mode: '0600'
+      notify: Restart SSH
   always:
-    - name: Vérifier la configuration SSH effective
+    - name: Récupération de la configuration SSH
       ansible.builtin.command: grep -E '^(PermitRootLogin|PasswordAuthentication|ChallengeResponseAuthentication|MaxAuthTries|LoginGraceTime|LogLevel|AllowUsers|PubkeyAuthentication|ClientAliveInterval|ClientAliveCountMax)' /etc/ssh/sshd_config # noqa yaml[line-length]
-      register: ssh_server_config_check
+      register: network_config_check
       changed_when: false
-    - name: Afficher la configuration SSH effective
+
+    - name: Afficher la configuration SSH
       ansible.builtin.debug:
-        var: ssh_server_config_check.stdout_lines
+        var: network_config_check.stdout_lines

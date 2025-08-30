@@ -1,0 +1,11 @@
+- name: Configuration du pare-feu
+  ansible.builtin.import_tasks: ufw.yml
+
+- name: Installation et activation du serveur SSH
+  ansible.builtin.import_tasks: sshd-install.yml
+
+- name: Configuration sécurisée du serveur SSH
+  ansible.builtin.import_tasks: sshd-config.yml
+
+- name: Déploiement de la clé publique SSH
+  ansible.builtin.import_tasks: ssh-copy-key.yml

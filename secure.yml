@@ -1,7 +1,7 @@
 - name: Paramétrage du playbook
   hosts: all
   roles:
-    - env_vars
+    - settings
 
 - name: Mise à jour du système d'exploitation
   hosts: all
@@ -17,9 +17,7 @@
   become: true
   roles:
     - os
-    - ssh_key
-    - ssh_server
-    - firewall
-    - auditd
-    - fail2ban
-    - mail_root
+    - network
+    - alert
+    - audit
+    - detection

@@ -4,4 +4,4 @@
     - name: Configuration de l’utilisateur principal
       ansible.builtin.user:
         name: "{{ ansible_user }}"
-        password_expire_min: "{{ env_vars_password_expiration }}"
+        password_expire_min: "{{ settings_password_expiration }}"

@@ -1,7 +1,5 @@
 - name: Redémarrer le service auditd
   become: true
-  tags:
-    - auditd
   ansible.builtin.service:
     name: auditd
     state: restarted

@@ -1,8 +1,5 @@
 - name: Configuration du pare-feu UFW (Zero Trust simplifié)
   become: true
-  tags:
-    - firewall
-    - ufw
   block:
     - name: Installer UFW
       ansible.builtin.apt:
@@ -41,15 +38,11 @@
     - name: Activer et appliquer UFW
       community.general.ufw:
         state: enabled
-  rescue:
-    - name: Échec de la configuration UFW
-      ansible.builtin.debug:
-        msg: "Échec lors de l'application des règles UFW sur {{ inventory_hostname }}"
   always:
     - name: Afficher l'état UFW après application
       ansible.builtin.command: ufw status verbose
-      register: firewall_ufw_status
+      register: network_ufw_status
       changed_when: false
     - name: Afficher le résultat UFW
       ansible.builtin.debug:
-        var: firewall_ufw_status.stdout
+        var: network_ufw_status.stdout
