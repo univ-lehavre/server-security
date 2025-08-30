@@ -1,15 +1,7 @@
 - name: Configuration des utilisateurs
   become: true
-  tags:
-    - os
-    - user
   block:
     - name: Configuration de l’utilisateur principal
       ansible.builtin.user:
         name: "{{ ansible_user }}"
         password_expire_min: "{{ env_vars_password_expiration }}"
-  rescue:
-    - name: Échec de la configuration de l’utilisateur principal
-      ansible.builtin.debug:
-        var: ansible_failed_result
-        msg: "Échec de la configuration de l’utilisateur principal sur {{ inventory_hostname }}"
