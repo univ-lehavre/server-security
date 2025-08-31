@@ -5,20 +5,29 @@
 ## Objectif
 
 - Tendre vers une politique **zero trust** de cybersécurité
+- Automatiser le plus possible l’installation et la configuration
+
+## Méthode
+
+Nous utilisons un ordinateur de contrôle (votre ordinateur de bureau par exemple) pour orchestrer à distance la configuration et la sécurisation d’un ou de plusieurs serveurs. L’automatisation est effectuée à l'aide de scripts et de playbooks Ansible.
 
 ## Pré-requis
 
-Avant de commencer, assurez-vous d'avoir installé localement les dépendances nécessaires :
+Sur l’ordinateur de contrôle, assurez-vous d'avoir installé  les dépendances nécessaires :
 
-- **Ansible** : pour l'exécution des playbooks.
-- **Python** : pour les scripts et modules utilisés.
+- **Ansible** : pour l'exécution des playbooks ;
+- **Python** : pour les scripts et modules utilisés ;
 - **SSH** : pour la connexion aux serveurs distants.
 
-Vous avez besoin des adresses IP de tous vos serveurs, ces derniers viendront d’être installés avec le système d’exploitation Debian bookworm (12), seront accessibles via le port 22 et chacun d’eux possède uniquement un compte utilisateur principal avec un mot de passe fort.
+Concernant les serveurs à sécuriser, nous considérons qu’ils bénéficient chacun de :
+
+- Une installation minimale et récente de Debian bookworm (12) ;
+- Un seul compte utilisateur avec un accès `sudo` et un mot de passe robuste ;
+- Une adresse IP avec le port 22 accessible depuis l’ordinateur de contrôle.
 
 ## Installation
 
-Clonez ce dépôt localement :
+Sur l’ordinateur de contrôle, clonez ce dépôt localement :
 
 ```bash
 git clone https://github.com/univ-lehavre/server-security.git
@@ -28,11 +37,13 @@ git clone https://github.com/univ-lehavre/server-security.git
 
 ## Utilisation
 
-Pour sécuriser votre ou vos serveurs, lancez la commande suivante :
+Pour sécuriser les serveurs, lancez la commande suivante :
 
 ```bash
 set -a; source .env; set +a; ansible-playbook --ask-pass --ask-become-pass --inventory hosts.yml secure.yml
 ```
+
+Cette commande exécute le playbook Ansible `secure.yml` en utilisant les informations d'identification fournies dans le fichier `.env` et en ciblant les hôtes définis dans `hosts.yml`.
 
 ## Contribution
 
@@ -49,8 +60,8 @@ npm run format
 npm run lint
 ```
 
-Avant de soumettre, lancez ce script afin que toutes les variables d’environnement soit bien dans l’exemple :
+Avant de soumettre, lancez ce script afin que toutes les variables d’environnement du fichier privé `.env` soient bien obfusquées dans le fichier public `.env.example` :
 
 ```bash
-cp .env .env-example && sed -i '' -E 's/^(.*)=.*/\1=<à modifier>/' .env-example
+perl ./blur-env.pl
 ```
