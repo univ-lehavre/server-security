@@ -1,5 +1,26 @@
-- name: Configuration sécurisée du serveur SSH
+- name: Installation et activation du serveur SSH
   become: true
+  tags:
+    - install
+  block:
+    - name: Installation du paquet OpenSSH
+      ansible.builtin.apt:
+        name: openssh-server
+        state: present
+
+    - name: Activation et démarrage du service SSH
+      ansible.builtin.systemd:
+        name: sshd
+        state: started
+        enabled: true
+
+- name: |
+    Configuration du serveur SSH
+    avec restauration de la configuration en cas d’échec
+  become: true
+  tags:
+    - configuration
+    - rollback
   block:
     - name: Sauvegarder la configuration SSH actuelle
       ansible.builtin.copy:
@@ -9,7 +30,6 @@
         owner: root
         group: root
         mode: '0600'
-
     - name: Désactiver le login root
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
