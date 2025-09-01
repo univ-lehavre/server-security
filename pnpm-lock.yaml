@@ -11,9 +11,6 @@ importers:
       changeset:
         specifier: ^0.2.6
         version: 0.2.6
-      commit:
-        specifier: link:@changesets/cli/commit
-        version: link:@changesets/cli/commit
       prettier:
         specifier: ^3.6.2
         version: 3.6.2

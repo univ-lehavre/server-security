@@ -21,7 +21,6 @@
   "homepage": "https://github.com/univ-lehavre/server-security#readme",
   "dependencies": {
     "changeset": "^0.2.6",
-    "commit": "link:@changesets/cli/commit",
     "prettier": "^3.6.2"
   }
 }
