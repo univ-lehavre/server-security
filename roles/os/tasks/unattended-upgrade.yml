@@ -1,7 +1,7 @@
-- name: Configuration des mises à jour critiques
+- name: Configuration des mises à jour
   become: true
   block:
-    - name: Installer la mise à jour automatique
+    - name: Installer la configuration automatique de mise à jour
       ansible.builtin.apt:
         name: unattended-upgrades
         state: present

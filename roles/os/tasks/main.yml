@@ -1,5 +1,5 @@
 - name: Gestion des utilisateurs
   ansible.builtin.import_tasks: users.yml
 
-- name: Automatisation des mises à jour de sécurité
+- name: Automatisation des mises à jour
   ansible.builtin.import_tasks: unattended-upgrade.yml
