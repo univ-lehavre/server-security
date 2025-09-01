@@ -16,11 +16,11 @@
 
 - name: |
     Configuration du serveur SSH
-    avec restauration de la configuration en cas d’échec
+    avec, en cas d’échec du rechargement du serveur SSH,
+    restauration de la configuration précédente
   become: true
   tags:
     - configuration
-    - rollback
   block:
     - name: Sauvegarder la configuration SSH actuelle
       ansible.builtin.copy:
