@@ -94,7 +94,7 @@ npm run format
 npm run lint
 ```
 
-Avant de soumettre, lancez ce script afin que toutes les variables d’environnement du fichier privé `.env` soient bien obfusquées dans le fichier public `.env.example` :
+Avant de soumettre, lancez ce script afin que toutes les variables d’environnement du fichier privé `.env` soient bien obfusquées dans le fichier public `.env-example` :
 
 ```bash
 perl ./blur-env.pl
