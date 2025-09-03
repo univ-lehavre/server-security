@@ -11,7 +11,7 @@
 
 Nous allons déployer une architecture de sécurité en plusieurs étapes, en utilisant un outil d'automatisation pour garantir la cohérence et la rapidité de la mise en œuvre.
 
-Ansible est un outil d'automatisation qui permet de gérer la configuration et le déploiement d'applications sur des serveurs distants. Il utilise un langage de description simple basé sur YAML pour définir l'état souhaité des systèmes. Concrètement, un playbook Ansible - ici le fichier `./secure.yml` - est un fichier YAML qui décrit les tâches à exécuter sur les hôtes cibles - décrits dans le fichier `./hosts.yml`. Parfois, ces tâches sont regroupées au sein d’un ou plusieurs rôles.
+Ansible est un outil d'automatisation qui permet de gérer la configuration et le déploiement d'applications sur des serveurs distants. Il utilise un langage de description simple basé sur YAML pour définir l'état souhaité des systèmes. Concrètement, un playbook Ansible - ici le fichier `./secure.yml` - est un fichier YAML qui décrit les tâches à exécuter sur les hôtes cibles - décrits dans le fichier `/etc/ansible/hosts`. Parfois, ces tâches sont regroupées au sein d’un ou plusieurs rôles.
 
 Notre playbook exécute plusieurs rôles pour sécuriser les serveurs. Il commence par charger les paramètres (rôle `settings`) pour exposer les variables d’environnement (décrites dans `./.env`), puis exécute en série (un hôte à la fois) une mise à jour complète du système en appelant la tâche upgrade-now du rôle `os`, et enfin applique, avec privilèges élevés, l’ensemble des rôles de durcissement (`os`, `network`, `alert`, `audit`, `detection`) pour configurer le compte administrateur, activer les mises à jour automatiques, sécuriser SSH et le pare‑feu, rediriger les mails système, déployer les règles d’audit et configurer la détection d’intrusion — bref, il met à jour puis durcit chaque machine de façon ordonnée.
 
@@ -74,10 +74,10 @@ git clone https://github.com/univ-lehavre/server-security.git
 Pour sécuriser les serveurs, lancez la commande suivante :
 
 ```bash
-set -a; source .env; set +a; ansible-playbook --ask-pass --ask-become-pass --inventory hosts.yml secure.yml
+set -a; source .env; set +a; ansible-playbook --ask-pass --ask-become-pass secure.yml
 ```
 
-Cette commande exécute le playbook Ansible `secure.yml` en utilisant les informations d'identification fournies dans le fichier `.env` et en ciblant les hôtes définis dans `hosts.yml`.
+Cette commande exécute le playbook Ansible `secure.yml` en utilisant les informations d'identification fournies dans le fichier `.env`.
 
 ## Contribution à ce dépôt de code
 
