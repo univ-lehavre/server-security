@@ -1,48 +1,48 @@
-- name: Configuration du pare-feu UFW (Zero Trust simplifié)
+- name: Installation et activation du pare-feu UFW
   become: true
+  tags:
+    - install
   block:
-    - name: Installer UFW
+    - name: Installation du paquet
       ansible.builtin.apt:
         name: ufw
         state: present
-        update_cache: true
 
-    - name: Définir la politique par défaut (incoming deny, outgoing allow)
+    - name: Activation et démarrage du service
+      ansible.builtin.systemd:
+        name: ufw
+        state: started
+        enabled: true
+
+- name: Configuration du pare-feu UFW
+  become: true
+  tags:
+    - configuration
+  block:
+    - name: Définir la politique entrante par défaut (deny)
       community.general.ufw:
         direction: incoming
         policy: deny
+      notify: Restart UFW
 
     - name: Définir la politique sortante par défaut (allow)
       community.general.ufw:
         direction: outgoing
         policy: allow
-
-    - name: Autoriser tout le trafic entrant depuis les autres serveurs du cluster
-      community.general.ufw:
-        direction: incoming
-        rule: allow
-        src: "{{ hostvars[item]['ansible_host'] | default(item) }}"
-      loop: "{{ groups['all'] | difference([inventory_hostname]) }}"
-      loop_control:
-        label: "{{ hostvars[item]['ansible_host'] | default(item) }}"
+      notify: Restart UFW
 
     - name: Autoriser OpenSSH depuis Internet
       community.general.ufw:
-        rule: allow
+        rule: limit
         name: OpenSSH
+      notify: Restart UFW
 
     - name: Activer le logging UFW
       community.general.ufw:
         logging: "on"
+      notify: Restart UFW
 
     - name: Activer et appliquer UFW
       community.general.ufw:
         state: enabled
-  always:
-    - name: Afficher l'état UFW après application
-      ansible.builtin.command: ufw status verbose
-      register: network_ufw_status
-      changed_when: false
-    - name: Afficher le résultat UFW
-      ansible.builtin.debug:
-        var: network_ufw_status.stdout
+      notify: Restart UFW
