@@ -73,6 +73,8 @@ git clone https://github.com/univ-lehavre/server-security.git
 
 Pour sécuriser les serveurs, lancez la commande suivante :
 
+Attention : le mot de passe est actuellement celui de la console de management
+
 ```bash
 set -a; source .env; set +a; ansible-playbook --ask-pass --ask-become-pass secure.yml
 ```
